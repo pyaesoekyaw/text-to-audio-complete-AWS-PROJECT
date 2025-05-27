@@ -1,106 +1,79 @@
-import boto3
 import os
+import json
+import boto3
 import uuid
-from urllib.parse import unquote_plus
-from PyPDF2 import PdfReader
-import docx2txt
+from botocore.client import Config
 
-s3 = boto3.client('s3')
-polly = boto3.client('polly')
-ses = boto3.client('ses')
-
+# ✅ Explicit region and signature version for stability
+s3 = boto3.client(
+    's3',
+    region_name='us-east-1',
+    config=Config(signature_version='s3v4')
+)
 
 BUCKET_NAME = os.environ.get("BUCKET_NAME")
-SENDER_EMAIL = os.environ.get("SENDER_EMAIL")
-
-
-def extract_text(bucket, key):
-    tmp_path = f"/tmp/{os.path.basename(key)}"
-    s3.download_file(bucket, key, tmp_path)
-
-    if key.endswith('.pdf'):
-        reader = PdfReader(tmp_path)
-        return "\n".join([p.extract_text() for p in reader.pages if p.extract_text()])
-    elif key.endswith('.docx'):
-        return docx2txt.process(tmp_path)
-    return ""
-
-
-def send_email(recipient, audio_url):
-    try:
-        html_content = f"""
-        <html>
-        <body style="font-family: Arial, sans-serif; background-color: #f7f7f7; padding: 20px;">
-          <div style="max-width: 600px; margin: auto; background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-            <h2 style="color: #333;">🎧 Your Audio is Ready!</h2>
-            <p>Hi there 👋,</p>
-            <p>Your document has been successfully converted to audio.</p>
-            <p>
-              <a href="{audio_url}" style="display: inline-block; padding: 12px 20px; margin-top: 20px;
-                font-size: 16px; color: white; background-color: #007bff;
-                border-radius: 5px; text-decoration: none;">
-                ▶️ Listen or Download Audio
-              </a>
-            </p>
-            <p style="margin-top: 40px; font-size: 14px; color: #666;">
-              Thank you for using <strong>Text-to-Audio</strong>!<br/>
-              This link will expire in 1 hour.
-            </p>
-          </div>
-        </body>
-        </html>
-        """
-
-        print(f"Sending email to {recipient} with audio link: {audio_url}")
-        ses.send_email(
-            Source=SENDER_EMAIL,
-            Destination={'ToAddresses': [recipient]},
-            Message={
-                'Subject': {'Data': '🎧 Your Audio is Ready!'},
-                'Body': {
-                    'Html': {'Data': html_content},
-                    'Text': {'Data': f"Your audio is ready: {audio_url}"}
-                }
-            }
-        )
-        print("✅ Email sent successfully.")
-    except Exception as e:
-        print("❌ Failed to send email:")
-        print(str(e))
-
 
 def lambda_handler(event, context):
-    print(event)
-    for record in event['Records']:
-        key = unquote_plus(record['s3']['object']['key'])
-        bucket = record['s3']['bucket']['name']
+    print("=== EVENT RECEIVED ===")
+    print(json.dumps(event, indent=2))
 
-        if not (key.endswith('.pdf') or key.endswith('.docx')):
-            continue
+    if event.get('httpMethod') == 'OPTIONS':
+        print("Preflight OPTIONS request handled.")
+        return {
+            'statusCode': 200,
+            'headers': cors_headers()
+        }
 
-        try:
-            file_id, voice, email = key.split("/")[-1].replace(".pdf", "").replace(".docx", "").split("___")
-        except:
-            voice = "Joanna"
-            email = None
-            file_id = str(uuid.uuid4())
+    try:
+        body = json.loads(event['body'])
+        voice = body.get('voice', 'Joanna')
+        email = body.get('email', 'example@example.com')
+        ext = body.get('ext', 'pdf')
 
-        text = extract_text(bucket, key)
-        if not text:
-            continue
+        file_id = str(uuid.uuid4())
+        file_key = f"uploads/{file_id}___{voice}___{email}.{ext}"
 
-        text = text[:3000]
-        response = polly.synthesize_speech(Text=text, OutputFormat='mp3', VoiceId=voice)
+        print("=== UPLOAD DETAILS ===")
+        print(f"Voice: {voice}")
+        print(f"Email: {email}")
+        print(f"File extension: {ext}")
+        print(f"Generated file key: {file_key}")
 
-        audio_key = f"audio/{file_id}.mp3"
-        s3.upload_fileobj(response['AudioStream'], bucket, audio_key)
+        url = s3.generate_presigned_url(
+            'put_object',
+            Params={
+                'Bucket': BUCKET_NAME,
+                'Key': file_key
+                # Not including ContentType for simplicity
+            },
+            ExpiresIn=300
+        )
 
-        if email:
-            audio_url = s3.generate_presigned_url(
-                'get_object',
-                Params={'Bucket': bucket, 'Key': audio_key},
-                ExpiresIn=3600
-            )
-            send_email(email, audio_url)
+        print("Generated presigned URL successfully.")
 
-    return {'statusCode': 200, 'body': 'Audio created'}
+        return {
+            'statusCode': 200,
+            'headers': cors_headers(),
+            'body': json.dumps({
+                'uploadUrl': url,
+                'fileId': file_id,
+                'voice': voice,
+                'email': email
+            })
+        }
+
+    except Exception as e:
+        print("❌ ERROR occurred while generating presigned URL")
+        print(str(e))
+        return {
+            'statusCode': 500,
+            'headers': cors_headers(),
+            'body': json.dumps({'error': str(e)})
+        }
+
+def cors_headers():
+    return {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST,OPTIONS',
+        'Access-Control-Allow-Headers': '*'
+    }
