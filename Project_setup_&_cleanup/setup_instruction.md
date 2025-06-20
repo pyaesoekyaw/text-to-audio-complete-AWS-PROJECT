@@ -38,24 +38,6 @@
 ![0004](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0004.png)
 ![0005](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0005.png)
 
-#### **b. Create Static Website Hosting Bucket**  
-- **Name**: `static-website-host` (must be lowercase).  
-- **Disable public access blocking** (required for hosting).  
-- **Enable static website hosting**:  
-  - **Index document**: `index.html`.  
-- **Bucket Policy** (replace `BUCKET_ARN`):  
-  ```json
-  {
-    "Version": "2012-10-17",
-    "Statement": [{
-      "Effect": "Allow",
-      "Principal": "*",
-      "Action": "s3:GetObject",
-      "Resource": "BUCKET_ARN/*"
-    }]
-  }
-  ```
-
 ---
 
 ### **2. Lambda Functions**  
@@ -139,6 +121,7 @@ In `text-to-audio-psk-file` bucket → **Properties → Event Notifications**:
 - Check the *acknowledge of turning off the public access blocking*
 - Create bucket.
 ![0030](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0030.png)
+
 ### Configure Static Website
 - Click on **website-hosting-buck**
 - Under **permissions** tab, edit **bucket policy**
@@ -154,10 +137,18 @@ In `text-to-audio-psk-file` bucket → **Properties → Event Notifications**:
 - Save changes
 ![0033](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0033.png)
 
-### **5. API Gateway**  
-- **Create HTTP API** with a POST method (`/presignurl`) integrated with `PresignUrl` Lambda.  
-- **Enable CORS** with `*` allowed origins.  
-- **Deploy API** and note the `invoke-url` (e.g., `https://abc123.execute-api.region.amazonaws.com`).  
+### **5. Set Up API Gateway
+- Create **API gateway**  : **Build** HTTP API
+- Assign API name "API-to-request-Url"
+- Add integrations, choose PresignUrl lambda function
+- Configure Post method with path and click next
+- After that click create
+![0034](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0034.png)
+![0035](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0035.png)
+  
+- Configuring CORS, write "*" and click add
+- Follow the instruction as the image and click save
+- Under Stages, click default stage and copy the invoke Url to give s3 bucket for upload document file
 
 ---
 
