@@ -15,7 +15,7 @@
 - AWS Account with permissions for:  
   - Lambda, S3, IAM, API Gateway, Polly, SES.  
 - Verified SES email identity (for sending audio files).  
-- Python 3.9+ (for testing locally).  
+- Python 3.13+ (for testing locally).  
 
 ---
 
@@ -29,8 +29,9 @@
 ![0000](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0000.png)
 ![0001](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0001.png)
 ![0002](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0002.png)
-- **Create two folders**:  
-  - `uploads/` (for user documents).  
+- **Create two folders**:
+- Click on you bucket.Add file folder.
+  - `uploads/` (for user inputted pdf or documents).  
   - `audio/` (for output MP3 files).
   - I have showed you how to add uploads/ folder. You have to do the same step for audio folder.
 ![0003](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0003.png)
