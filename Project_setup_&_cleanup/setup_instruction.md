@@ -42,6 +42,7 @@
 
 ## **2. Lambda Functions**  
 ### Create **`PresignUrl` Function**  
+
 - **Runtime**: Python 3.13 or higher.
 - click **create function**.
 ![0006](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0006.png)
@@ -59,7 +60,9 @@
 ![0011](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0011.png)
 ![0012](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0012.png)
 ![0013](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0013.png)
+
 ### Create **`ConvertTextToAudio` Function**  
+
 - **Runtime**: Python 3.13 or higher.  
 - In the **Code** tab: Paste the [code](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/Lambda%20-%20Python%20Code/AudioConvertion.py).
 - Limited Pre-Installed Libraries – Lambda’s default Python runtime does not include libraries like PyPDF2, pdf2text, or textract (required to extract text from PDFs/DOCs).
@@ -86,7 +89,11 @@ Under **Configuration** tab, Edit **General Configuration**.
 - This time you have to add an email which will also receive the Audio file as well.
 ![0020](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0020.png)
 ![0021](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0021.png)
+
+---
+
 ## **3. Set Up Amazon SES**
+
 - Go to Amazon SES service.
 - Choose **Email**, and enter your desired email address.
 - The person will receive verification email.
@@ -98,7 +105,8 @@ Under **Configuration** tab, Edit **General Configuration**.
 
 ---
 
-## **4. Configure S3 Event Triggers**  
+## **4. Configure S3 Event Triggers**
+
 In `text-to-audio-psk-file` bucket → **Properties → Event Notifications**:  
 - Name the event
 - Assign **uploads** folder to access pdf and docx file from the user
@@ -115,6 +123,7 @@ In `text-to-audio-psk-file` bucket → **Properties → Event Notifications**:
 ---
 
 ## **5. Create Static Website Hosting Bucket**
+
 - Create **new bucket** for static website hosting (do not start with capital letter of the bucket name)
 - I've named `website-hosting-buck`.
 - Disable **public access blocking**, because we are testing to access the website directly, u know.
@@ -138,6 +147,7 @@ In `text-to-audio-psk-file` bucket → **Properties → Event Notifications**:
 ![0033](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0033.png)
 
 ## **6. Set Up API Gateway**
+
 - Create **API gateway**  : **Build** HTTP API
 - Assign API name "API-to-request-Url"
 - Add integrations, choose PresignUrl lambda function
@@ -154,7 +164,8 @@ In `text-to-audio-psk-file` bucket → **Properties → Event Notifications**:
 ![0038](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0038.png)
 ---
 
-## **7. Static Website Deployment**  
+## **7. Static Website Deployment** 
+
 1. Update `index.html` with your API Gateway endpoint:  
    ```javascript
    const API_URL = "https://your-api-id.execute-api.region.amazonaws.com/presignurl";
@@ -176,7 +187,7 @@ In `text-to-audio-psk-file` bucket → **Properties → Event Notifications**:
 
 ### For PresignUrl Role
 - Click the **PresignUrl** IAM role
-- 
+
 ![0043](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0043.png)
 
 - Create inline policy and attach the policy to iam role
@@ -184,11 +195,13 @@ In `text-to-audio-psk-file` bucket → **Properties → Event Notifications**:
 - Filter for "putObject" and choose PutObject
 - Choose All resource in S3 service
 - Name the policy and create policy.
+
 ![0044](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0044.png)
 ![0045](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0045.png)
 ![0046](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0046.png)
 
 ### For ConvertTextToAudio Role
+
 - Add inline policies for **convertTextToAudio** IAM role
 - Add `putObject`, `getObject`, `listBucket` Actions and choose all resources for **S3** service
 - Add **Polly** service and filter the `SynthesizeSpeech` action allowed for all resources
@@ -213,6 +226,7 @@ In `text-to-audio-psk-file` bucket → **Properties → Event Notifications**:
 ![0053](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0053.png)
 
 ## Verification
+
 - Access the website and add your document and enjoy the process.
 - Audio files will arrive into bucket.
 - Your email will also receive the audio file from AWS.
