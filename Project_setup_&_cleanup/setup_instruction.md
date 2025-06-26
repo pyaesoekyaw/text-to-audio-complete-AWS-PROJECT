@@ -59,7 +59,7 @@
 ![0011](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0011.png)
 ![0012](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0012.png)
 ![0013](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0013.png)
-### Create ** `ConvertTextToAudio` Function**  
+### Create **`ConvertTextToAudio` Function**  
 - **Runtime**: Python 3.13 or higher.  
 - In the **Code** tab: Paste the [code](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/Lambda%20-%20Python%20Code/AudioConvertion.py).
 - Limited Pre-Installed Libraries – Lambda’s default Python runtime does not include libraries like PyPDF2, pdf2text, or textract (required to extract text from PDFs/DOCs).
@@ -86,7 +86,7 @@ Under **Configuration** tab, Edit **General Configuration**.
 - This time you have to add an email which will also receive the Audio file as well.
 ![0020](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0020.png)
 ![0021](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0021.png)
-## **3. Set Up Amazon SES
+## **3. Set Up Amazon SES**
 - Go to Amazon SES service.
 - Choose **Email**, and enter your desired email address.
 - The person will receive verification email.
@@ -114,7 +114,7 @@ In `text-to-audio-psk-file` bucket → **Properties → Event Notifications**:
 
 ---
 
-## **5. Create Static Website Hosting Bucket
+## **5. Create Static Website Hosting Bucket**
 - Create **new bucket** for static website hosting (do not start with capital letter of the bucket name)
 - I've named `website-hosting-buck`.
 - Disable **public access blocking**, because we are testing to access the website directly, u know.
@@ -137,7 +137,7 @@ In `text-to-audio-psk-file` bucket → **Properties → Event Notifications**:
 - Save changes
 ![0033](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0033.png)
 
-## **6. Set Up API Gateway
+## **6. Set Up API Gateway**
 - Create **API gateway**  : **Build** HTTP API
 - Assign API name "API-to-request-Url"
 - Add integrations, choose PresignUrl lambda function
@@ -173,7 +173,7 @@ In `text-to-audio-psk-file` bucket → **Properties → Event Notifications**:
 
 ---
 
-## **8. Configure IAM Permissions
+## **8. Configure IAM Permissions**
 
 ### For PresignUrl Role
 - Click the **PresignUrl** IAM role
@@ -203,7 +203,7 @@ In `text-to-audio-psk-file` bucket → **Properties → Event Notifications**:
 
 ---
 
-## **9. Final Configuration
+## **9. Final Configuration**
 
 - Under permissions of the convertion bucket, edit **CORS** and paste the ![code](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/Lambda%20-%20Python%20Code/CORS%20for%20S3%20bucket.txt) provided in github repo.
 ![0051](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0051.png)
