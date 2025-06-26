@@ -169,7 +169,6 @@ In `text-to-audio-psk-file` bucket → **Properties → Event Notifications**:
 
 4. Please make sure you deploy both functions, otherwise you will get the Error message.
 ![0042](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0042.png)
-![0043](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0043.png)
 
 ---
 
@@ -177,6 +176,9 @@ In `text-to-audio-psk-file` bucket → **Properties → Event Notifications**:
 
 ### For PresignUrl Role
 - Click the **PresignUrl** IAM role
+- 
+![0043](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0043.png)
+
 - Create inline policy and attach the policy to iam role
 - Choose the S3 service
 - Filter for "putObject" and choose PutObject
