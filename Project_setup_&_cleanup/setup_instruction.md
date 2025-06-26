@@ -47,7 +47,7 @@
 ![0006](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0006.png)
 ![0007](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0007.png)
 ![0008](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0008.png)
-- In the **Code** tab: Paste the python code from [PresignUrl.py](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/Lambda%20-%20Python%20Code/PresignUrl-psk.py).
+- In the **Code** tab: Paste the [code](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/Lambda%20-%20Python%20Code/PresignUrl-psk.py).
 - If you receive the warning box, you can just *accept* it.
 ![0009](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0009.png)
 ![0010](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0010.png)
@@ -61,7 +61,7 @@
 ![0013](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/images/0013.png)
 ### Create ** `ConvertTextToAudio` Function**  
 - **Runtime**: Python 3.13 or higher.  
-- In the **Code** tab: Paste the ![code](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/Lambda%20-%20Python%20Code/AudioConvertion.py).
+- In the **Code** tab: Paste the [code](https://github.com/pyaesoekyaw/text-to-audio-complete-AWS-PROJECT/blob/main/Lambda%20-%20Python%20Code/AudioConvertion.py).
 - Limited Pre-Installed Libraries – Lambda’s default Python runtime does not include libraries like PyPDF2, pdf2text, or textract (required to extract text from PDFs/DOCs).
 - **Layers** allow you to package dependencies separately and attach them to Lambda functions. 
 - At the **Layers** tab : create Layer
